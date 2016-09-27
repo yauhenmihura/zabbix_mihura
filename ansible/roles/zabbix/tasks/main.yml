@@ -32,6 +32,8 @@
 # Configure db
 - name: configure db 
   shell: /usr/bin/mysql_install_db --user=mysql
+  register: wp_theme
+  changed_when: false
 
 # Start MySQL
 - name: enable mysql server
@@ -63,16 +65,18 @@
 # Create zabbix db, user, import schema
 - name: create database zabbix
   mysql_db: name=zabbix state=present encoding=utf8 collation=utf8_bin
+  register: zabbix_database_create
 
 - name: create mysql user 
   mysql_user: name=zabbix password=zabbix priv=zabbix.*:ALL state=present
-
+  
 - name: Import initial schema
   mysql_db: name=zabbix state=import target={{item}}
   with_items:
     - /usr/share/doc/zabbix-server-mysql-2.2.14/create/schema.sql
     - /usr/share/doc/zabbix-server-mysql-2.2.14/create/images.sql
     - /usr/share/doc/zabbix-server-mysql-2.2.14/create/data.sql
+  when: zabbix_database_create.changed
 
 # Copy configured httpd-zabbix conf 
 - name: Copy zabbix Config
