@@ -26,8 +26,8 @@
 ![imgs](pic/triggers.png "imgs")
 
 8. Screenshot with process of using zabbix_sender and with server reply. (Important: use zabbix_sender with key –vv for maximal verbosity)
-![imgs](pic/zabbix_set.png "imgs")
-![imgs](pic/zabbix_check.png "imgs")
+![imgs](pic/zabbix_sender_set.png "imgs")
+![imgs](pic/zabbix_sender_check.png "imgs")
 
 9. Screenshot with process of using zabbix_get and with agent reply.
 ![imgs](pic/zabbix_get.png "imgs")
