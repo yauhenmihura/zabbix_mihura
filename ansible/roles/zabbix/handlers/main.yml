@@ -9,3 +9,7 @@
 
 - name: restart mysqld
   service: name=mysqld state=restarted
+
+
+- name: start httpd
+  service: name=httpd state=started

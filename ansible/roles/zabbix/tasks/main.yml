@@ -8,10 +8,7 @@
 # Install Apache 
 - name: install the latest version of Apache
   yum: name=httpd state=latest
- 
-# Start Apache 
-- name: start Apache
-  service: name=httpd enabled=yes state=started
+  notify: start httpd 
 
 # Install MySQL
 - name: install mysql
@@ -55,8 +52,8 @@
     - zabbix-web-mysql
     - zabbix-agent
 
-# Start MySQL
-- name: enable mysql server
+# Start Zabbix
+- name: start zabbix and server
   service: name={{ item }} enabled=yes state=started
   with_items:
      - zabbix-server 
