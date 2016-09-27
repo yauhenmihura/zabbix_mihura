@@ -1,4 +1,7 @@
 # Task1 zabbix_mihura
+
+![imgs](pic/ansible.png "imgs")
+
 1. Screenshot with result of execution SQL statement “select userid,alias,name,passwd,refresh from users where alias like 'Admin'; 
 ![imgs](pic/mysql_select.png "imgs")
 
@@ -23,7 +26,8 @@
 ![imgs](pic/triggers.png "imgs")
 
 8. Screenshot with process of using zabbix_sender and with server reply. (Important: use zabbix_sender with key –vv for maximal verbosity)
-![imgs](pic/zabbix_sender.png "imgs")
+![imgs](pic/zabbix_set.png "imgs")
+![imgs](pic/zabbix_check.png "imgs")
 
 9. Screenshot with process of using zabbix_get and with agent reply.
 ![imgs](pic/zabbix_get.png "imgs")
