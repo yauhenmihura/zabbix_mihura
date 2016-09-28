@@ -10,5 +10,7 @@
 <br><b>Latest data</b></br>
 ![imgs](pic/zabbix_task2_7.png "imgs")
 ![imgs](pic/zabbix_task2_6.png "imgs")
-<br><b>Start script</b></br>
+<br><b>Start create host script</b></br>
 ![imgs](pic/zabbix_task2_5.png "imgs")
+<br><b>Start update host script</b></br>
+![imgs](pic/zabbix_task2_update.png "imgs")
