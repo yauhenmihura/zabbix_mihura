@@ -1,4 +1,4 @@
-# Task1 zabbix_mihura
+# Task2 zabbix_mihura
 
 <br><b>Create template</b></br>
 ![imgs](pic/zabbix_task2_1.png "imgs")
