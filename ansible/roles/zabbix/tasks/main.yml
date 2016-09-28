@@ -1,0 +1,94 @@
+# tasks file for Zabbix
+- debug: msg="Will install Mysql+apache+zabbix"
+
+# Disable iptables for task
+- name: disable iptables
+  service: name=iptables enabled=no state=stopped
+
+# Install Apache 
+- name: install the latest version of Apache
+  yum: name=httpd state=latest
+  notify: start httpd 
+
+# Install MySQL
+- name: install mysql
+  yum: name={{ item }} state=present
+  with_items:
+    - mysql
+    - mysql-server
+    - MySQL-python
+
+# Add my.cnf with path to innobd
+- name: Add Mysql Config
+  template: src=my.cnf dest=/etc/my.cnf
+
+# Create folder for innobd
+- name: create innodb folder 
+  file: path=/opt/mysql state=directory owner=mysql group=mysql
+
+# Configure db
+- name: configure db 
+  shell: /usr/bin/mysql_install_db --user=mysql
+  register: wp_theme
+  changed_when: false
+
+# Start MySQL
+- name: enable mysql server
+  service: name=mysqld enabled=yes state=started
+
+# Install Zabbix repo
+- name: install the zabbix
+  yum: name=http://repo.zabbix.com/zabbix/2.2/rhel/6/x86_64/zabbix-release-2.2-1.el6.noarch.rpm state=present
+
+# RPM KEY for Zabbix
+- name: Install Zabbix Repository Key 
+  rpm_key: state=present key=http://repo.zabbix.com/RPM-GPG-KEY-ZABBIX
+
+# Install Zabbix packages
+- name: install zabbix packeges
+  yum: pkg={{ item }} state=installed
+  with_items:
+    - zabbix-server-mysql
+    - zabbix-web-mysql
+    - zabbix-agent
+
+# Start Zabbix
+- name: start zabbix and server
+  service: name={{ item }} enabled=yes state=started
+  with_items:
+     - zabbix-server 
+     - zabbix-agent
+
+# Create zabbix db, user, import schema
+- name: create database zabbix
+  mysql_db: name=zabbix state=present encoding=utf8 collation=utf8_bin
+  register: zabbix_database_create
+
+- name: create mysql user 
+  mysql_user: name=zabbix password=zabbix priv=zabbix.*:ALL state=present
+  
+- name: Import initial schema
+  mysql_db: name=zabbix state=import target={{item}}
+  with_items:
+    - /usr/share/doc/zabbix-server-mysql-2.2.14/create/schema.sql
+    - /usr/share/doc/zabbix-server-mysql-2.2.14/create/images.sql
+    - /usr/share/doc/zabbix-server-mysql-2.2.14/create/data.sql
+  when: zabbix_database_create.changed
+
+# Copy configured zabbix php conf 
+- name: Copy zabbix Config
+  template: src=zabbix.conf.php dest=/etc/zabbix/web/zabbix.conf.php
+
+# Copy configured httpd-zabbix conf 
+- name: Copy zabbix Config
+  template: src=zabbix_server.conf dest=/etc/zabbix/zabbix_server.conf
+  notify: restart zabbix server
+
+# Copy configured httpd.conf 
+- name: Add httpd config
+  template: src=httpd.conf dest=/etc/httpd/conf/httpd.conf
+
+# Copy configured zabbix conf
+- name: Add zabbix conf
+  template: src=zabbix.conf dest=/etc/httpd/conf.d/zabbix.conf
+  notify: restart httpd
