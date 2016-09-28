@@ -75,6 +75,10 @@
     - /usr/share/doc/zabbix-server-mysql-2.2.14/create/data.sql
   when: zabbix_database_create.changed
 
+# Copy configured zabbix php conf 
+- name: Copy zabbix Config
+  template: src=zabbix.conf.php dest=/etc/zabbix/web/zabbix.conf.php
+
 # Copy configured httpd-zabbix conf 
 - name: Copy zabbix Config
   template: src=zabbix_server.conf dest=/etc/zabbix/zabbix_server.conf
